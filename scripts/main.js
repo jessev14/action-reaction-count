@@ -51,7 +51,7 @@ Hooks.on('controlToken', () => {
     updateTray();
 });
 
-Hooks.on('preUpdateActor', (actor, diff, options, userID) => {
+Hooks.on('updateActor', (actor, diff, options, userID) => {
     updateTray();
 });
 
@@ -72,7 +72,7 @@ async function updateTray() {
         const {value: actionValue = 3, max: actionMax = 3 } = actor.getFlag(moduleID, 'actions') || {};
         let actionDots = ``;
         for (let i = 0; i < actionMax; i++) {
-            if (i <= actionValue) actionDots += `<div class="dot"></div>`;
+            if (i < actionValue) actionDots += `<div class="dot"></div>`;
             else actionDots += `<div class="dot empty"></div>`
         }
         const actions = document.createElement('div');
@@ -92,7 +92,7 @@ async function updateTray() {
         const {value: reactionValue = 1, max: reactionMax = 1 } = actor.getFlag(moduleID, 'reactions') || {};
         let reactionDots = ``;
         for (let i = 0; i < reactionMax; i++) {
-            if (i <= reactionValue) reactionDots += `<div class="dot"></div>`;
+            if (i < reactionValue) reactionDots += `<div class="dot"></div>`;
             else reactionDots += `<div class="dot empty"></div>`
         }
         const reactions = document.createElement('div');
