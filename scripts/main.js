@@ -14,9 +14,10 @@ Hooks.on('renderActorSheet5e', (app, [html], appData) => {
     const injectLocation = html.querySelector(isPC ? 'ul.resources' : 'div.counters');
 
     const arUl = document.createElement('ul');
-    arUl.classList.add('resources');
+    arUl.classList.add('resources', moduleID);
     for (const arType of ['actions', 'reactions']) {
         const li = document.createElement('li');
+        li.dataset.cssOverride = moduleID;
         li.classList.add('resource');
         li.innerHTML = `
             <h4 class="resource-name">
