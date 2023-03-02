@@ -65,7 +65,8 @@ async function updateTray() {
 
     for (const actorDiv of actorsDiv.querySelectorAll('div.action-pack__actor')) {
         const uuid = actorDiv.dataset.actorUuid;
-        const actor = fromUuidSync(uuid);
+        const uuidRes = fromUuidSync(uuid);
+        const actor = uuidRes.documentName === 'Actor' ? uuidRes : uuidRes.actor;
         if (!actor) continue;
     
         if (actorDiv.querySelector(`div#${moduleID}-actions`) || actorDiv.querySelector(`div#${moduleID}-reactions`)) continue;
