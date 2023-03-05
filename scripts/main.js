@@ -24,9 +24,9 @@ Hooks.on('renderActorSheet5e', (app, [html], appData) => {
                 <input type="text" value="${arType}" disabled>
             </h4>
             <div class="resource-value multiple">
-                <input class="res-value" type="text" name="flags.${moduleID}.${arType}.value" value="${actor.flags[moduleID]?.[arType]?.value || (arType === 'actions' ? 3 : 1)}"  data-dtype="Number" maxlength="3">
+                <input class="res-value" type="text" name="flags.${moduleID}.${arType}.value" value="${actor.flags[moduleID]?.[arType]?.value ?? (arType === 'actions' ? 3 : 1)}"  data-dtype="Number" maxlength="3">
                 <span class="sep"> / </span>
-                <input class="res-max" type="text" name="flags.${moduleID}.${arType}.max" value="${actor.flags[moduleID]?.[arType]?.max || (arType === 'actions' ? 3 : 1)}" data-dtype="Number" maxlength="3">
+                <input class="res-max" type="text" name="flags.${moduleID}.${arType}.max" value="${actor.flags[moduleID]?.[arType]?.max ?? (arType === 'actions' ? 3 : 1)}" data-dtype="Number" maxlength="3">
             </div>
         `;
         arUl.appendChild(li);
