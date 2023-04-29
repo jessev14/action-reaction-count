@@ -32,6 +32,8 @@ Hooks.on('renderActorSheet5e', (app, [html], appData) => {
         arUl.appendChild(li);
     }
     injectLocation.after(arUl);
+
+    updateTray();
 });
 
 Hooks.on('updateCombat', (combat, diff, options, userID) => {
@@ -57,6 +59,7 @@ Hooks.on('updateActor', (actor, diff, options, userID) => {
 });
 
 async function updateTray() {
+    lg('update tray')
     await new Promise(resolve => setTimeout(resolve, 50));
 
     const actionPack = document.querySelector('#action-pack');
@@ -89,7 +92,17 @@ async function updateTray() {
             </h3>
             <div class="group-uses">${actionValue}/${actionMax}</div>
         `;
-
+        actions.querySelectorAll('.group-dots .dot').forEach(dot => {
+            dot.addEventListener('click', async ev => {
+                const dot = ev.currentTarget
+                const parentEl = dot.parentElement;
+                const idx = [...parentEl.children].indexOf(dot);
+                const currentActions = actor.getFlag(moduleID, 'actions.value');
+                let newActions = dot.classList.contains('empty') ? idx + 1 : idx;
+                if (idx + 1 < currentActions) newActions += 1;
+                await actor.setFlag(moduleID, 'actions.value', newActions);
+            });
+        });
 
         const {value: reactionValue = 1, max: reactionMax = 1 } = actor.getFlag(moduleID, 'reactions') || {};
         let reactionDots = ``;
@@ -109,6 +122,17 @@ async function updateTray() {
             </h3>
             <div class="group-uses">${reactionValue}/${reactionMax}</div>
         `;
+        reactions.querySelectorAll('.group-dots .dot').forEach(dot => {
+            dot.addEventListener('click', async ev => {
+                const dot = ev.currentTarget
+                const parentEl = dot.parentElement;
+                const idx = [...parentEl.children].indexOf(dot);
+                const currentActions = actor.getFlag(moduleID, 'reactions.value');
+                let newActions = dot.classList.contains('empty') ? idx + 1 : idx;
+                if (idx + 1 < currentActions) newActions += 1;
+                await actor.setFlag(moduleID, 'reactions.value', newActions);
+            });
+        });
 
         const header = actorDiv.querySelector('h1');
         header.after(reactions);
