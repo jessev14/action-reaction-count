@@ -11,19 +11,19 @@ Hooks.once('init', () => {
 Hooks.on('renderActorSheet5e', (app, [html], appData) => {
     const actor = app.object;
     const isPC = actor.type === 'character';
-    const injectLocation = html.querySelector(isPC ? 'ul.resources' : 'div.counters');
+    const injectLocation = html.querySelector(isPC ? 'section.center-pane ul.attributes' : 'div.counters');
 
     const arUl = document.createElement('ul');
-    arUl.classList.add('resources', moduleID);
+    arUl.classList.add('attributes', moduleID);
     for (const arType of ['actions', 'reactions']) {
         const li = document.createElement('li');
         li.dataset.cssOverride = moduleID;
-        li.classList.add('resource');
+        li.classList.add('resource', 'attribute');
         li.innerHTML = `
-            <h4 class="resource-name">
+            <h4 class="attribute-name box-title">
                 <input type="text" value="${arType}" disabled>
             </h4>
-            <div class="resource-value multiple">
+            <div class="attribute-value">
                 <input class="res-value" type="text" name="flags.${moduleID}.${arType}.value" value="${actor.flags[moduleID]?.[arType]?.value ?? (arType === 'actions' ? 3 : 1)}"  data-dtype="Number" maxlength="3">
                 <span class="sep"> / </span>
                 <input class="res-max" type="text" name="flags.${moduleID}.${arType}.max" value="${actor.flags[moduleID]?.[arType]?.max ?? (arType === 'actions' ? 3 : 1)}" data-dtype="Number" maxlength="3">
