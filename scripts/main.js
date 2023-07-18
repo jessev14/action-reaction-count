@@ -5,6 +5,7 @@ const lg = x => console.log(x);
 
 Hooks.once('init', () => {
     libWrapper.register(moduleID, 'CONFIG.Item.documentClass.prototype.use', newUse, 'MIXED');
+    libWrapper.ignore_conflicts(moduleID, ['wire'], ['CONFIG.Item.documentClass.prototype.use']);
 });
 
 
@@ -58,6 +59,7 @@ Hooks.on('updateActor', (actor, diff, options, userID) => {
     updateTray();
 });
 
+
 async function updateTray() {
     lg('update tray')
     await new Promise(resolve => setTimeout(resolve, 50));
@@ -71,10 +73,10 @@ async function updateTray() {
         const uuidRes = fromUuidSync(uuid);
         const actor = uuidRes.documentName === 'Actor' ? uuidRes : uuidRes.actor;
         if (!actor) continue;
-    
+
         if (actorDiv.querySelector(`div#${moduleID}-actions`) || actorDiv.querySelector(`div#${moduleID}-reactions`)) continue;
 
-        const {value: actionValue = 3, max: actionMax = 3 } = actor.getFlag(moduleID, 'actions') || {};
+        const { value: actionValue = 3, max: actionMax = 3 } = actor.getFlag(moduleID, 'actions') || {};
         let actionDots = ``;
         for (let i = 0; i < actionMax; i++) {
             if (i < actionValue) actionDots += `<div class="dot"></div>`;
@@ -104,7 +106,7 @@ async function updateTray() {
             });
         });
 
-        const {value: reactionValue = 1, max: reactionMax = 1 } = actor.getFlag(moduleID, 'reactions') || {};
+        const { value: reactionValue = 1, max: reactionMax = 1 } = actor.getFlag(moduleID, 'reactions') || {};
         let reactionDots = ``;
         for (let i = 0; i < reactionMax; i++) {
             if (i < reactionValue) reactionDots += `<div class="dot"></div>`;
@@ -160,7 +162,7 @@ async function newUse(wrapped, config = {}, options = {}) {
                     label: 'No'
                 }
             },
-            default: 'no'
+            default: 'no',
         });
         if (overrideChoice === 'no') return;
     }
