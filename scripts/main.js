@@ -144,8 +144,14 @@ async function updateTray() {
 
 async function newUse(wrapped, config = {}, options = {}) {
     const { actor } = this;
+    const tokens = actor.getActiveTokens();
+    const isTurn = tokens.some(t => {
+        const td = t.document;
+        const combatant = td?.combatant;
+        return combatant.combat.current.combatantId === combatant.id;
+    });
 
-    const actionType = this.system.activation.type === 'action' ? 'actions' : 'reactions';
+    const actionType = (this.system.activation.type === 'action') && isTurn ? 'actions' : 'reactions';
     const actionCost = this.system.activation.cost;
 
     const currentActionValue = actor.getFlag(moduleID, `${actionType}.value`);
