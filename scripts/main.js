@@ -148,7 +148,7 @@ async function newUse(wrapped, config = {}, options = {}) {
     const isTurn = tokens.some(t => {
         const td = t.document;
         const combatant = td?.combatant;
-        return combatant.combat.current.combatantId === combatant.id;
+        return combatant?.combat.current.combatantId === combatant.id;
     });
 
     const actionType = (this.system.activation.type === 'action') && isTurn ? 'actions' : 'reactions';
