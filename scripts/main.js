@@ -12,10 +12,16 @@ Hooks.once('init', () => {
 Hooks.on('renderActorSheet5e', (app, [html], appData) => {
     const actor = app.object;
     const isPC = actor.type === 'character';
-    const injectLocation = html.querySelector(isPC ? 'section.center-pane ul.attributes' : 'div.counters');
+    let injectLocation;
+    let cls = 'attributes';
+    injectLocation = html.querySelector(isPC ? 'section.center-pane ul.attributes' : 'div.counters');
+    if (!injectLocation) {
+        injectLocation = html.querySelector(isPC ? 'section.main-panel ul.resources' : null);
+        cls = 'resources';
+    }
 
     const arUl = document.createElement('ul');
-    arUl.classList.add('attributes', moduleID);
+    arUl.classList.add(cls, moduleID);
     for (const arType of ['actions', 'reactions']) {
         const li = document.createElement('li');
         li.dataset.cssOverride = moduleID;
@@ -148,7 +154,7 @@ async function newUse(wrapped, config = {}, options = {}) {
     const isTurn = tokens.some(t => {
         const td = t.document;
         const combatant = td?.combatant;
-        return combatant?.combat.current.combatantId === combatant.id;
+        return combatant?.combat.current.combatantId === combatant?.id;
     });
 
     const actionType = (this.system.activation.type === 'action') && isTurn ? 'actions' : 'reactions';

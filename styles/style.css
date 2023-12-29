@@ -1,3 +1,43 @@
 section.center-pane ul.attributes.action-reaction-count li.resource.hidden[data-css-override="action-reaction-count"] {
     display: unset !important;
 }
+
+.tidy5e-kgar ul.resources.action-reaction-count {
+    border: 0.0625rem solid var(--t5ek-faint-color);
+    border-radius: 0.3125rem;
+    display: flex;
+    justify-content: space-around;
+}
+
+.tidy5e-kgar ul.resources.action-reaction-count li.resource.attribute {
+    border-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+}
+
+.tidy5e-kgar ul.resources.action-reaction-count li.resource.attribute h4.attribute-name {
+    margin: 0;
+    font-weight: 700;
+    border: none;
+}
+
+.tidy5e-kgar ul.resources.action-reaction-count li.resource.attribute h4.attribute-name input {
+    font-family: var(--t5ek-title-font-family);
+    font-weight: 700;
+    font-size: 1rem;
+    text-align: center;
+    height: 1.125rem;
+}
+
+.tidy5e-kgar ul.resources.action-reaction-count li.resource.attribute div.attribute-value {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 1.375rem;
+    line-height: 1.5625rem;
+    font-family: var(--t5ek-title-font-family);
+}
+
+.tidy5e-kgar ul.resources.action-reaction-count li.resource.attribute div.attribute-value input.res-value {
+    text-align: right;
+}
