@@ -71,7 +71,7 @@ async function updateTray() {
     await new Promise(resolve => setTimeout(resolve, 50));
 
     const actionPack = document.querySelector('#action-pack');
-    const actorsDiv = actionPack.querySelector('div.action-pack__container');
+    const actorsDiv = actionPack?.querySelector('div.action-pack__container');
     if (!actorsDiv) return;
 
     for (const actorDiv of actorsDiv.querySelectorAll('div.action-pack__actor')) {
