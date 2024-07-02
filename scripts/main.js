@@ -10,6 +10,8 @@ Hooks.once('init', () => {
 
 
 Hooks.on('renderActorSheet5e', (app, [html], appData) => {
+    if (['ActorSheet5eCharacter2', 'Tidy5eCharacterSheet'].includes(app.constructor.name)) return;
+
     const actor = app.object;
     const isPC = actor.type === 'character';
     let injectLocation;
@@ -41,6 +43,140 @@ Hooks.on('renderActorSheet5e', (app, [html], appData) => {
     injectLocation.after(arUl);
 
     updateTray();
+});
+
+Hooks.on('renderActorSheet5eCharacter2', (app, [html], appData) => {
+    const { actor } = app;
+    const actionReactionDiv = document.createElement('div');
+    actionReactionDiv.classList.add('action-reaction-card')
+    actionReactionDiv.innerHTML = `
+        <div class="action-reaction-container">
+            <span class="action-reaction-label">Actions: </span>
+            <input type="number" class="action-reaction-input" name="flags.${moduleID}.actions.value" value="${actor.getFlag(moduleID, 'actions.value') ?? 3}" data-dtype="Number" maxlength="3" />
+            <span class="action-reaction-separator">/</span>
+            <input type="number" class="action-reaction-input" name="flags.${moduleID}.actions.max" value="${actor.getFlag(moduleID, 'actions.max') ?? 3}" data-dtype="Number" maxlength="3" />
+        </div>
+
+        <div class="action-reaction-container">
+            <span class="action-reaction-label">Reactions: </span>
+            <input type="number" class="action-reaction-input" name="flags.${moduleID}.reactions.value" value="${actor.getFlag(moduleID, 'reactions.value') ?? 3}" data-dtype="Number" maxlength="3" />
+            <span class="action-reaction-separator">/</span>
+            <input type="number" class="action-reaction-input" name="flags.${moduleID}.reactions.max" value="${actor.getFlag(moduleID, 'reactions.max') ?? 3}" data-dtype="Number" maxlength="3" />
+        </div>
+    `;
+
+
+    const card = html.querySelector('div.card');
+    card.after(actionReactionDiv);
+});
+
+Hooks.on('tidy5e-sheet.renderActorSheet', (app, html, appData, firstRender) => {
+    const { actor } = app;
+
+    if (app.constructor.name === 'Tidy5eCharacterSheet') {
+        if (firstRender) {
+            const resources = html.querySelector('ul.resources');
+            const resourcesLi = resources.querySelector('li');
+            const resourceH4 = resourcesLi.querySelector('h4');
+            const resourceDiv = resourcesLi.querySelector('div');
+            const resourceSpan = resourcesLi.querySelector('span.sep');
+            const resourceConfigButton = resourcesLi.querySelector('button.resource-options');
+
+            const arUl = document.createElement('ul');
+            arUl.className = resources.className;
+            for (const arType of ['actions', 'reactions']) {
+                const arLi = document.createElement('li');
+                arLi.className = resourcesLi.className;
+                arLi.classList.add(arType);
+                arLi.innerHTML = `
+                    <h4 class="${resourceH4.className}">
+                        <input type="text" disabled value="${arType === 'actions' ? 'Actions' : 'Reactions'}" />
+                    </h4>
+                    <div class="${resourceDiv.className}">
+                        <input type="text" placeholder="3" class="resource-value" maxlength="3" value="${actor.getFlag(moduleID, `${arType}.value`)}" disabled />
+                        <span class="${resourceSpan.className}">/</span>
+                        <input type="text" placeholder="3" class="resource-max" maxlength="3"  value="${actor.getFlag(moduleID, `${arType}.max`)}" disabled />
+                    </div>
+                    <button type="button" style="position: absolute; bottom: 0; right: 0;" class="${arType} ${resourceConfigButton.className}" tabindex="-1"><i class="fas fa-cog"></i></button>
+                `;
+                arLi.querySelector(`button.${arType}`).addEventListener('click', () => arConfigDialog(arType));
+                arUl.appendChild(arLi);
+            }
+            resources.before(arUl);
+        } else {
+            for (const arType of ['actions', 'reactions']) {
+                const arLi = html.querySelector(`li.${arType}`);
+                const valueInput = arLi.querySelector('input.resource-value');
+                valueInput.value = actor.getFlag(moduleID, `${arType}.value`);
+                const maxInput = arLi.querySelector('input.resource-max');
+                maxInput.value = actor.getFlag(moduleID, `${arType}.max`);
+            }
+        }
+    } else {
+        if (firstRender) {
+            const arUl = document.createElement('ul');
+            arUl.innerHTML = `
+                <li class="actions ar-tidy5eNPC">
+                    <h4>Actions</h4>
+                    <input class="resource-value" type="number" value="${actor.getFlag(moduleID, 'actions.value') ?? 3}" disabled />
+                    <span>/</span>
+                    <input class="resource-max" type="number" value="${actor.getFlag(moduleID, 'actions.max') ?? 3}" disabled />
+                    <a class="actions"><i class="fas fa-cog"></i></a>
+                </li>
+                <li class="reactions ar-tidy5eNPC">
+                    <h4>Reactions</h4>
+                    <input class="resource-value" type="number" value="${actor.getFlag(moduleID, 'reactions.value') ?? 3}" disabled />
+                    <span>/</span>
+                    <input class="resource-max" type="number" value="${actor.getFlag(moduleID, 'reactions.max') ?? 3}" disabled />
+                    <a class="reactions"><i class="fas fa-cog"></i></a>
+                </li>
+            `;
+            arUl.querySelector('a.actions').addEventListener('click', () => arConfigDialog('actions'));
+            arUl.querySelector('a.reactions').addEventListener('click', () => arConfigDialog('reactions'));
+
+            const mainPanel = html.querySelector('div.main-panel');
+            mainPanel.prepend(arUl);
+        } else {
+            for (const arType of ['actions', 'reactions']) {
+                const arLi = html.querySelector(`li.${arType}`);
+                const valueInput = arLi.querySelector('input.resource-value');
+                valueInput.value = actor.getFlag(moduleID, `${arType}.value`);
+                const maxInput = arLi.querySelector('input.resource-max');
+                maxInput.value = actor.getFlag(moduleID, `${arType}.max`);
+            }
+        }
+    }
+
+    function arConfigDialog(arType) {
+        new Dialog({
+            title: `Configure ${arType[0].toUpperCase()}${arType.slice([1])}`,
+            content: `
+                <div class="form-group">
+                    <label>Value</label>
+                    <input class="value" type="number" value="${actor.getFlag(moduleID, `${arType}.value`)}" />
+                </div>
+                <div class="form-group">
+                    <label>Max</label>
+                    <input class="max" type="number" value="${actor.getFlag(moduleID, `${arType}.max`)}" />
+                </div>
+            `,
+            buttons: {
+                confirm: {
+                    label: 'Confirm',
+                    callback: ([html]) => {
+                        const arValue = html.querySelector('input.value').value ?? 3;
+                        const arMax = html.querySelector('input.max').value ?? 3;
+
+                        const updates = {
+                            [`flags.${moduleID}.${arType}.value`]: Number(arValue),
+                            [`flags.${moduleID}.${arType}.max`]: Number(arMax)
+                        }
+                        return actor.update(updates);
+                    }
+                }
+            }
+        }).render(true);
+    }
 });
 
 Hooks.on('updateCombat', (combat, diff, options, userID) => {

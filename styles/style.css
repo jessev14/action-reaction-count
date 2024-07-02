@@ -2,6 +2,33 @@ section.center-pane ul.attributes.action-reaction-count li.resource.hidden[data-
     display: unset !important;
 }
 
+/* ActorSheetCharacter2 */
+
+div.action-reaction-card {
+    color: var(--dnd5e-color-gold);
+    margin-top: 10px;
+}
+
+div.action-reaction-container {
+    display: flex;
+    align-items: center;
+}
+
+span.action-reaction-label {
+    flex: unset;
+    width: 100px;
+}
+
+input.action-reaction-input {
+    flex: 1;
+}
+
+span.action-reaction-separator {
+    margin: 0 5px;
+}
+
+/* Tidy5eSheet */
+
 .tidy5e-kgar ul.resources.action-reaction-count {
     border: 0.0625rem solid var(--t5ek-faint-color);
     border-radius: 0.3125rem;
@@ -40,4 +67,22 @@ section.center-pane ul.attributes.action-reaction-count li.resource.hidden[data-
 
 .tidy5e-kgar ul.resources.action-reaction-count li.resource.attribute div.attribute-value input.res-value {
     text-align: right;
+}
+
+li.ar-tidy5eNPC {
+    display: flex;
+    align-items: center;
+}
+
+li.ar-tidy5eNPC * {
+    flex: 0
+}
+
+li.ar-tidy5eNPC h4 {
+    flex: unset;
+    width: 100px;
+}
+
+li.ar-tidy5eNPC span {
+    margin-right: 10px;
 }
