@@ -1,0 +1,43 @@
+div.action-reaction-count-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 0.0625rem solid var(--t5e-faint-color);
+    border-radius: 0.3125rem;
+    padding: 5px;
+
+    label {
+        text-align: center;
+    }
+
+    div.actions-container {
+        display: flex;
+        flex-direction: row;
+        gap: 15px;
+
+        * {
+            flex: 1;
+            text-align: center;
+        }
+
+        div.action {
+            display: flex;
+            flex-direction: column;
+            background: var(--t5e-faintest-color);
+            min-width: 100px;
+            border-radius: 0.3125rem;
+
+            div.count-inputs {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+
+                input {
+                    width: 30px;
+                    text-align: center;
+                }
+            }
+        }
+    }
+}

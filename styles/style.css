@@ -1,88 +1,39 @@
-section.center-pane ul.attributes.action-reaction-count li.resource.hidden[data-css-override="action-reaction-count"] {
-    display: unset !important;
+div.action-reaction-count-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 0.0625rem solid var(--t5e-faint-color);
+  border-radius: 0.3125rem;
+  padding: 5px;
+}
+div.action-reaction-count-container label {
+  text-align: center;
+}
+div.action-reaction-count-container div.actions-container {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
+div.action-reaction-count-container div.actions-container * {
+  flex: 1;
+  text-align: center;
+}
+div.action-reaction-count-container div.actions-container div.action {
+  display: flex;
+  flex-direction: column;
+  background: var(--t5e-faintest-color);
+  min-width: 100px;
+  border-radius: 0.3125rem;
+}
+div.action-reaction-count-container div.actions-container div.action div.count-inputs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+div.action-reaction-count-container div.actions-container div.action div.count-inputs input {
+  width: 30px;
+  text-align: center;
 }
 
-/* ActorSheetCharacter2 */
-
-div.action-reaction-card {
-    color: var(--dnd5e-color-gold);
-    margin-top: 10px;
-}
-
-div.action-reaction-container {
-    display: flex;
-    align-items: center;
-}
-
-span.action-reaction-label {
-    flex: unset;
-    width: 100px;
-}
-
-input.action-reaction-input {
-    flex: 1;
-}
-
-span.action-reaction-separator {
-    margin: 0 5px;
-}
-
-/* Tidy5eSheet */
-
-.tidy5e-kgar ul.resources.action-reaction-count {
-    border: 0.0625rem solid var(--t5ek-faint-color);
-    border-radius: 0.3125rem;
-    display: flex;
-    justify-content: space-around;
-}
-
-.tidy5e-kgar ul.resources.action-reaction-count li.resource.attribute {
-    border-top: 0;
-    margin-bottom: 0;
-    padding-top: 0;
-}
-
-.tidy5e-kgar ul.resources.action-reaction-count li.resource.attribute h4.attribute-name {
-    margin: 0;
-    font-weight: 700;
-    border: none;
-}
-
-.tidy5e-kgar ul.resources.action-reaction-count li.resource.attribute h4.attribute-name input {
-    font-family: var(--t5ek-title-font-family);
-    font-weight: 700;
-    font-size: 1rem;
-    text-align: center;
-    height: 1.125rem;
-}
-
-.tidy5e-kgar ul.resources.action-reaction-count li.resource.attribute div.attribute-value {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 1.375rem;
-    line-height: 1.5625rem;
-    font-family: var(--t5ek-title-font-family);
-}
-
-.tidy5e-kgar ul.resources.action-reaction-count li.resource.attribute div.attribute-value input.res-value {
-    text-align: right;
-}
-
-li.ar-tidy5eNPC {
-    display: flex;
-    align-items: center;
-}
-
-li.ar-tidy5eNPC * {
-    flex: 0
-}
-
-li.ar-tidy5eNPC h4 {
-    flex: unset;
-    width: 100px;
-}
-
-li.ar-tidy5eNPC span {
-    margin-right: 10px;
-}
+/*# sourceMappingURL=style.css.map */
