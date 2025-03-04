@@ -1,6 +1,6 @@
 export const moduleID = 'action-reaction-count';
 
-import { ActionAdvancement } from './action-advancement.js';
+import { ActionMaximum } from './action-advancement.js';
 
 const lg = x => console.log(x);
 
@@ -8,8 +8,8 @@ const lg = x => console.log(x);
 Hooks.once('init', () => {
     for (const activityType of Object.values(CONFIG.DND5E.activityActivationTypes)) activityType.scalar = true;
     
-    CONFIG.DND5E.advancementTypes.ActionAdvancement = {
-        documentClass: ActionAdvancement,
+    CONFIG.DND5E.advancementTypes.ActionMaximum = {
+        documentClass: ActionMaximum,
         validItemTypes: new Set(['class'])
     };
 });
