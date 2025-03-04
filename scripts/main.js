@@ -12,20 +12,49 @@ Hooks.once('init', () => {
         documentClass: ActionMaximum,
         validItemTypes: new Set(['class'])
     };
+
+    CONFIG.DND5E.activityActivationTypes.attack = {
+        group: 'DND5E.ACTIVATION.Category.Standard',
+        label: 'Attack Action',
+        scalar: true
+    };
+    CONFIG.DND5E.activityActivationTypes.spell = {
+        group: 'DND5E.ACTIVATION.Category.Standard',
+        label: 'Magic Action',
+        scalar: true
+    };
 });
 
 
 Hooks.on('dnd5e.preUseActivity', (activity, usageConfig, dialogConfig, messageConfig) => {
-    if (activity.activation.type !== 'action') return;
-
     const actor = fromUuidSync(activity.actor.uuid);
     const item = fromUuidSync(activity.item.uuid);
     if (!actor || !item) return;
 
     const actionCost = activity.activation.value;
-    const itemActionType = getItemActionType(actor, item);
+    let itemActionType = game.combat.combatant.actorId !== actor.id ? 'reaction' : activity.activation.type;
+    if (itemActionType === 'action') itemActionType = 'normal';
     const actorActionCount = actor.getFlag(moduleID, `${itemActionType}.count`);
-    if (!actorActionCount) return;
+    if (actorActionCount === undefined) return;
+
+    if (actionCost > actorActionCount) {
+        const remainder = actionCost - actorActionCount;
+        if (remainder > actor.getFlag(moduleID, 'normal.count')) {
+            ChatMessage.create({
+                content: 'Insufficient actions.'
+            });
+            return actor.update({
+                [`flags.${moduleID}.${itemActionType}.count`]: 0,
+                [`flags.${moduleID}.normal.count`]: 0
+            });
+        } else {
+            return actor.update({
+                [`flags.${moduleID}.${itemActionType}.count`]: 0,
+                [`flags.${moduleID}.normal.count`]: actor.getFlag(moduleID, 'normal.count') - remainder
+            });
+
+        }
+    }
 
     if (actionCost > actorActionCount) {
         ui.notifications.warn(`Not enough ${itemActionType} actions.`);
@@ -34,21 +63,9 @@ Hooks.on('dnd5e.preUseActivity', (activity, usageConfig, dialogConfig, messageCo
 
     return actor.setFlag(moduleID, `${itemActionType}.count`, actorActionCount - actionCost);
 
-
-    function getItemActionType(actor, item) {
-        if (game.combat.combatant.actorId !== actor.id) return 'reaction';
-
-        const itemProps = Array.from(item.system.properties).map(p => CONFIG.DND5E.itemProperties[p]?.label.toLowerCase());
-
-        if ((item.type === 'weapon' || item.type === 'feat') && itemProps.includes('attack')) return 'attack';
-        if (item.type === 'spell' && itemProps.includes('spell')) return 'spell';
-        return 'normal';
-    }
-
 });
 
 Hooks.on('tidy5e-sheet.renderActorSheet', (app, html, appData) => {
-
     const actor = app.actor;
     const attributesTab = html?.querySelector('div.tidy-tab.attributes');
     const mainPanel = attributesTab?.querySelector(`${actor.type === 'character' ? 'section' : 'div'}.main-panel`);
@@ -89,7 +106,7 @@ Hooks.on('tidy5e-sheet.renderActorSheet', (app, html, appData) => {
                     </div>
                 </div>
                 <div class="action">
-                    <label>Spell</label>
+                    <label>Magic</label>
                     <div class="count-inputs">
                         <input type="number" min="0" step="1" name="flags.${moduleID}.spell.count"
                             value="${actor.getFlag(moduleID, 'spell.count') || 0}" placeholder="0" />
@@ -140,7 +157,7 @@ Hooks.on('tidy5e-sheet.renderActorSheet', (app, html, appData) => {
                 </div>
             </div>
             <div class="action">
-                <label>Spell</label>
+                <label>Magic</label>
                 <div class="count-inputs">
                     <input type="number" min="0" step="1" name="flags.${moduleID}.spell.count"
                         value="${actor.getFlag(moduleID, 'spell.count') || 0}" placeholder="0" />
