@@ -7,8 +7,8 @@ export class ActionMaximum extends dnd5e.documents.advancement.Advancement {
     static get metadata() {
         return foundry.utils.mergeObject(super.metadata, {
             dataModels: {
-                configuration: ActionMaximumConfigData,
-                value: ActionMaximumValueData
+                configuration: ActionMaximumData,
+                value: ActionMaximumData
             },
             order: 20,
             title: 'Action Maximum',
@@ -43,7 +43,7 @@ export class ActionMaximum extends dnd5e.documents.advancement.Advancement {
     }
 }
 
-class ActionMaximumConfigData extends foundry.abstract.DataModel {
+class ActionMaximumData extends foundry.abstract.DataModel {
     static defineSchema() {
         return {
             actionType: new foundry.data.fields.StringField(),
@@ -52,14 +52,6 @@ class ActionMaximumConfigData extends foundry.abstract.DataModel {
     }
 }
 
-class ActionMaximumValueData extends foundry.abstract.DataModel {
-    static defineSchema() {
-        return {
-            actionType: new foundry.data.fields.StringField(),
-            increase: new foundry.data.fields.NumberField({ integer: true, min: 1, initial: 1 })
-        }
-    }
-}
 
 class ActionMaximumConfig extends dnd5e.applications.advancement.AdvancementConfig {
     static get defaultOptions() {
