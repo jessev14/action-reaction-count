@@ -36,4 +36,18 @@ div.action-reaction-count-container div.actions-container div.action div.count-i
   text-align: center;
 }
 
+filigree-box.saves.actions ul li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+filigree-box.saves.actions ul li div.count-inputs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+filigree-box.saves.actions ul li div.count-inputs input:disabled {
+  background: unset !important;
+}
+
 /*# sourceMappingURL=style.css.map */

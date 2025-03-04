@@ -41,3 +41,25 @@ div.action-reaction-count-container {
         }
     }
 }
+
+filigree-box.saves.actions {
+
+    ul {
+
+        li {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            div.count-inputs {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                input:disabled {
+                    background: unset !important;
+                }
+            }
+        }
+    }
+}
